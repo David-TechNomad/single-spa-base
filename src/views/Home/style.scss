@@ -1,0 +1,26 @@
+.home {
+  width: 100%;
+  height: 100%;
+
+  > nav {
+    width: 100%;
+    height: 52px;
+    overflow: hidden;
+  }
+
+  > main {
+    width: 100%;
+    height: calc(100% - 52px);
+    display: flex;
+
+    .sideBar {
+      width: auto;
+      height: 100%;
+      flex-shrink: 0;
+    }
+
+    .content {
+      flex-grow: 1;
+    }
+  }
+}

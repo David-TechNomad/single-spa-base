@@ -1,0 +1,83 @@
+.commandLike {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f5f6f8;
+  display: grid;
+  overflow: hidden;
+  grid-template-areas:
+          '. topBar'
+          'sideBar subSystem'
+  ;
+  grid-template-rows: min-content ;
+  grid-template-columns: min-content ;
+
+  .sideBar {
+    grid-area: sideBar;
+    z-index: 103;
+    margin-top: -40px;
+    height: 100vh;
+  }
+  .topBar {
+    grid-area: topBar;
+    z-index: 102;
+  }
+  .subSystem {
+    position: relative;
+    overflow: overlay;
+    grid-area: subSystem;
+  }
+  .dispatch, .command, .carrier {
+    display: none;
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+
+    &.content {
+      display: block;
+      z-index: 10;
+    }
+    &.sideBarUnfold {
+      display: block;
+      z-index: 100;
+    }
+    &.show {
+      display: block;
+    }
+    &.hide {
+    }
+  }
+
+  .rightSide {
+    z-index: 100;
+    position: absolute;
+    display: flex;
+    flex-direction: row-reverse;
+    right: 0;
+    background: white;
+    height: 100%;
+    .item {
+      height: 100%;
+      display: block;
+    }
+    .outerScroll {
+      overflow-y: scroll;
+    }
+  }
+  .chatBox {
+    z-index: 100;
+    position: absolute;
+  }
+  .floatIcon {
+    position: absolute;
+    z-index: 99;
+  }
+  .basePopup {
+    position: absolute;
+    z-index: 104;
+  }
+}
+

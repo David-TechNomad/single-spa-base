@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>
+        <%= title %>
+    </title>
+    <script>
+    // fast
+    function determineMobile() {
+      let sUserAgent = navigator.userAgent.toLowerCase();
+      let bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+      let bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+      let bIsMidp = sUserAgent.match(/midp/i) == "midp";
+      let bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+      let bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+      let bIsAndroid = sUserAgent.match(/android/i) == "android";
+      let bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+      let bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+      if (
+        bIsIpad ||
+        bIsIphoneOs ||
+        bIsMidp ||
+        bIsUc7 ||
+        bIsUc ||
+        bIsAndroid ||
+        bIsCE ||
+        bIsWM
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    let url = location.search
+    let theRequest = {};
+    if (url.indexOf("?") !== -1) {
+      let str = url.substr(1);
+      let strs = str.split("&");
+      for (let i = 0; i < strs.length; i++) {
+        theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
+      }
+    }
+    if (location.pathname === '/scan-document' && determineMobile() && theRequest.share) {
+      location.href = "<%= DOCUMENT_URL %>scan-document" + url
+    } else  if (location.pathname == '/map/index' && determineMobile() && theRequest.shareId) {
+      location.href = "<%= TRACk_URL %>shareTrack" + url
+    } else if (location.pathname == '/sign-up' && determineMobile()) {
+      location.href = "<%= VERIFY_URL %>sign-up" + url
+    } else if (determineMobile()) {
+      if (location.pathname.includes('/h5/logon')) {
+        location.href = location.origin + '/h5/logon' + url
+      } else if (location.pathname.includes('/map') && theRequest.tlTrialToken) {
+        location.href = location.origin + '/h5/map/index' + url
+      } else {
+        location.href = location.origin + '/h5' + url
+      }
+    }
+    if (!determineMobile() && location.pathname.includes('/h5/map')) {
+      location.href = location.origin + '/map/index' + url
+    }
+    
+    </script>
+
+    <script type="systemjs-importmap" crossorigin="anonymous">
+        <%= systemJsImportmap %>
+    </script>
+    <script src="<%=systemjsPath%>"></script>
+    <% for (var i in htmlWebpackPlugin.options.files.js) { %>
+        <script crossorigin type="text/javascript" src="<%= htmlWebpackPlugin.options.files.js[i] %>"></script>
+    <% } %>
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <% if (node_env === 'development' && dispatch_dev){ %>
+    <script type="module">
+        window.__vite_plugin_react_preamble_installed__ = true
+        import RefreshRuntime from "http://localhost:8010/@react-refresh";
+        RefreshRuntime.injectIntoGlobalHook(window)
+        window.$RefreshReg$ = () => { }
+        window.$RefreshSig$ = () => (type) => type
+    </script>
+    <% } %>
+
+    <% if (node_env === 'development'){ %>
+    <import-map-overrides-full show-when-local-storage="devtools" dev-libs></import-map-overrides-full>
+    <% } %>
+    <div id="root" class="root"></div>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    </script></body>
+
+</html>
